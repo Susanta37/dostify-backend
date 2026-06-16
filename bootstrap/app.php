@@ -41,4 +41,8 @@ return Application::configure(basePath: dirname(__DIR__))
         RateLimiter::for('otp-verify', function (Request $request) {
             return Limit::perMinute(10)->by($request->input('phone', $request->ip()));
         });
+
+        RateLimiter::for('google-login', function (Request $request) {
+            return Limit::perMinute(10)->by($request->ip());
+        });
     })->create();

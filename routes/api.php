@@ -20,6 +20,8 @@ Route::prefix('v1')->group(function () {
             ->middleware('throttle:otp-request');
         Route::post('otp/verify', [AuthController::class, 'verifyOtp'])
             ->middleware('throttle:otp-verify');
+        Route::post('google', [AuthController::class, 'googleLogin'])
+            ->middleware('throttle:google-login');
     });
 
     Route::middleware('auth:sanctum')->group(function () {

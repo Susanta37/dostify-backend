@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\Auth\GoogleLoginRequest;
 use App\Http\Requests\Api\V1\Auth\RequestOtpRequest;
 use App\Http\Requests\Api\V1\Auth\VerifyOtpRequest;
 use App\Http\Resources\Api\V1\UserResource;
@@ -31,6 +32,28 @@ class AuthController extends Controller
         $result = $this->auth->verifyOtpAndLogin(
             phone: $request->validated('phone'),
             otp: $request->validated('otp'),
+            deviceData: [
+                'device_id' => $request->validated('device_id'),
+                'device_name' => $request->validated('device_name'),
+                'device_type' => $request->validated('device_type'),
+                'fcm_token' => $request->validated('fcm_token'),
+                'ip_address' => $request->ip(),
+            ],
+            referralCode: $request->validated('referral_code'),
+        );
+
+        return response()->json([
+            'message' => 'Login successful.',
+            'token' => $result['token'],
+            'is_profile_complete' => $result['is_profile_complete'],
+            'user' => new UserResource($result['user']),
+        ]);
+    }
+
+    public function googleLogin(GoogleLoginRequest $request): JsonResponse
+    {
+        $result = $this->auth->loginWithGoogle(
+            idToken: $request->validated('id_token'),
             deviceData: [
                 'device_id' => $request->validated('device_id'),
                 'device_name' => $request->validated('device_name'),

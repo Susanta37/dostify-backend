@@ -19,6 +19,16 @@ class UserRepository extends BaseRepository
         return User::query()->where('phone', $phone)->first();
     }
 
+    public function findByEmail(string $email): ?User
+    {
+        return User::query()->where('email', $email)->first();
+    }
+
+    public function findByGoogleId(string $googleId): ?User
+    {
+        return User::query()->where('google_id', $googleId)->first();
+    }
+
     public function findByReferralCode(string $code): ?User
     {
         return User::query()->where('referral_code', $code)->first();
